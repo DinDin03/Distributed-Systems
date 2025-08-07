@@ -16,7 +16,7 @@ public class CartItemTest {
     }
     
     @Test
-    @DisplayName("Constructor should set all fields correctly")
+    @DisplayName("constructor should set all fields correctly")
     void testConstructor() {
         assertEquals("Laptop", laptop.getItemName());
         assertEquals(2, laptop.getQuantity());
@@ -24,28 +24,28 @@ public class CartItemTest {
     }
     
     @Test
-    @DisplayName("Total price should calculate quantity times price per unit")
+    @DisplayName("total price should calculate quantity times price per unit")
     void testTotalPrice() {
         assertEquals(1999.98, laptop.totalPrice(), 0.01);
         assertEquals(77.50, book.totalPrice(), 0.01);
     }
     
     @Test
-    @DisplayName("Should handle zero quantity correctly")
+    @DisplayName("handle zero quantity")
     void testZeroQuantity() {
         CartItem zeroItem = new CartItem("Test", 0, 10.0);
         assertEquals(0.0, zeroItem.totalPrice(), 0.01);
     }
     
     @Test
-    @DisplayName("Should handle zero price correctly")
+    @DisplayName("handle zero price")
     void testZeroPrice() {
         CartItem freeItem = new CartItem("Free Sample", 3, 0.0);
         assertEquals(0.0, freeItem.totalPrice(), 0.01);
     }
     
     @Test
-    @DisplayName("Getters should return correct values")
+    @DisplayName("getters should return correct values")
     void testGetters() {
         assertEquals("Book", book.getItemName());
         assertEquals(5, book.getQuantity());

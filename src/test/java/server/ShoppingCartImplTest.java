@@ -17,7 +17,7 @@ public class ShoppingCartImplTest {
     }
 
     @Test
-    @DisplayName("New cart should be empty")
+    @DisplayName("new cart should be empty")
     void testNewCartIsEmpty() throws RemoteException {
         assertEquals(0, cart.getTotalItems());
         assertEquals(0.0, cart.getTotalPrice(), 0.01);
@@ -25,7 +25,7 @@ public class ShoppingCartImplTest {
     }
 
     @Test
-    @DisplayName("Adding one item to the cart")
+    @DisplayName("adding one item to the cart")
     void testAddSingleItem() throws RemoteException {
         CartItem Laptop = new CartItem("Laptop", 2, 999.99);
         cart.addItem(Laptop);
@@ -36,7 +36,7 @@ public class ShoppingCartImplTest {
     }
 
     @Test
-    @DisplayName("Adding duplicate items should combine quantities")
+    @DisplayName("adding duplicate items should combine quantities")
     void testAddDuplicateItems() throws RemoteException {
         cart.addItem(new CartItem("Laptop", 1, 999.99));
         cart.addItem(new CartItem("Laptop", 2, 999.99));
@@ -50,7 +50,7 @@ public class ShoppingCartImplTest {
     }
 
     @Test
-    @DisplayName("Clear cart should empty everything")
+    @DisplayName("clear cart should empty everything")
     void testClearCart() throws RemoteException {
         cart.addItem(new CartItem("Laptop", 2, 999.99));
         cart.addItem(new CartItem("Mouse", 1, 25.50));
