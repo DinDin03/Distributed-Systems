@@ -1,9 +1,0 @@
-interfaces/CartItem.class
-interfaces/ShoppingCart.class
-client/ShoppingCartClient.class
-interfaces/AreaCalculator.class
-server/ShoppingCartServer.class
-server/ShoppingCartImpl.class
-client/AreaCalculatorClient.class
-server/AreaCalculatorImpl.class
-server/AreaCalculatorServer.class
