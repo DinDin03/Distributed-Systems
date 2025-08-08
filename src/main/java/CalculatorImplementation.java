@@ -12,22 +12,22 @@ public class CalculatorImplementation extends UnicastRemoteObject implements Cal
         stack = new ArrayDeque<>();
     }
 
-    public void pushValue(int val) throws RemoteException{
+    public synchronized void pushValue(int val) throws RemoteException{
         stack.push(val);
     }
 
-    public int pop() throws RemoteException{
+    public synchronized int pop() throws RemoteException{
         if(stack.isEmpty()){
             throw new RemoteException("Cannot pop from an empty stack");
         }
         return stack.pop();
     }
 
-    public boolean isEmpty() throws RemoteException{
+    public synchronized boolean isEmpty() throws RemoteException{
         return stack.isEmpty();
     }
 
-    public int delayPop(int millis) throws RemoteException{
+    public synchronized int delayPop(int millis) throws RemoteException{
         try{
             Thread.sleep(millis);
         }catch(InterruptedException e){
@@ -37,7 +37,7 @@ public class CalculatorImplementation extends UnicastRemoteObject implements Cal
         return pop();
     }
 
-    public void pushOperation(String operator) throws RemoteException{
+    public synchronized void pushOperation(String operator) throws RemoteException{
         if(!validOperators.contains(operator)){
             throw new RemoteException("Invalid operator: " + operator + 
                                     ". Valid operators are: min, max, gcd, lcm");
