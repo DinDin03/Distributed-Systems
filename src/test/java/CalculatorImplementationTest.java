@@ -93,7 +93,7 @@ public class CalculatorImplementationTest {
         calculator.pushValue(42);
         
         long startTime = System.currentTimeMillis();
-        int result = calculator.delayPop(1000); // 1 second delay
+        int result = calculator.delayPop(1000);
         long endTime = System.currentTimeMillis();
         
         assertEquals(42, result, "DelayPop should return correct value");
