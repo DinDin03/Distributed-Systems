@@ -17,7 +17,17 @@ public class CalculatorIntegrationTest {
                 Calculator calculator = new CalculatorImplementation();
 
                 registry = LocateRegistry.createRegistry(TEST_RMI_PORT);
+
+                registry.bind("Calculator", calculator);
+
+                System.out.println("Integration test server started on port " + TEST_RMI_PORT);
+            } catch (Exception e) {
+                System.err.println("Failed to start test server: " + e.getMessage());
             }
         });
+
+        serverThread.start();
+        Thread.sleep(2000);
+        System.out.println("Server startup completed");
     }
 }
