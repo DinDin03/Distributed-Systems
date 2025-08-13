@@ -29,5 +29,6 @@ public class CalculatorIntegrationTest {
         serverThread.start();
         Thread.sleep(2000);
         System.out.println("Server startup completed");
+        
     }
 }
