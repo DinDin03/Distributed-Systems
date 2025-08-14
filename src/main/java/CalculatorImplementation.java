@@ -1,21 +1,30 @@
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class CalculatorImplementation extends UnicastRemoteObject implements Calculator{
 
     private final Deque<Integer> stack;
     private final List<String> validOperators = Arrays.asList("min", "max", "gcd", "lcm");
 
+    private final Map<String, Deque<Integer>> clientStacks;
+    private final ThreadLocal<String> currentSession;
+
     public CalculatorImplementation() throws RemoteException{
         super();
         stack = new ArrayDeque<>();
+
+        clientStacks = new ConcurrentHashMap<>();
+        currentSession = new ThreadLocal<>();
     }
 
+    @Override
     public synchronized void pushValue(int val) throws RemoteException{
         stack.push(val);
     }
 
+    @Override
     public synchronized int pop() throws RemoteException{
         if(stack.isEmpty()){
             throw new RemoteException("Cannot pop from an empty stack");
@@ -23,10 +32,12 @@ public class CalculatorImplementation extends UnicastRemoteObject implements Cal
         return stack.pop();
     }
 
+    @Override
     public synchronized boolean isEmpty() throws RemoteException{
         return stack.isEmpty();
     }
 
+    @Override
     public synchronized int delayPop(int millis) throws RemoteException{
         try{
             Thread.sleep(millis);
@@ -37,6 +48,7 @@ public class CalculatorImplementation extends UnicastRemoteObject implements Cal
         return pop();
     }
 
+    @Override
     public synchronized void pushOperation(String operator) throws RemoteException{
         if(!validOperators.contains(operator)){
             throw new RemoteException("Invalid operator: " + operator + 
@@ -75,6 +87,15 @@ public class CalculatorImplementation extends UnicastRemoteObject implements Cal
         stack.push(result);
     }
 
+    @Override
+    public synchronized String createSession() throws RemoteException{
+        String sessionId = UUID.randomUUID().toString();
+        clientStacks.put(sessionId, new ArrayDeque<>());
+        System.out.println("New session created " + sessionId);
+
+        return sessionId;
+    }
+
     private int gcd(int a, int b){
         if(b == 0) return a;
         else{
@@ -108,4 +129,6 @@ public class CalculatorImplementation extends UnicastRemoteObject implements Cal
         }
         return res;
     }
+
+
 }

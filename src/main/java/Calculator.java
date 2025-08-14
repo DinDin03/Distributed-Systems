@@ -11,5 +11,9 @@ public interface Calculator extends Remote {
     boolean isEmpty() throws RemoteException;
 
     int delayPop(int millis) throws RemoteException;
+
+    String createSession() throws RemoteException;
+
+    void setSession(String sessionId) throws RemoteException;
      
 }
