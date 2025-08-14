@@ -66,145 +66,214 @@ public class CalculatorIntegrationTest {
     }
 
     @Test
-    @DisplayName("Connect client to server to perform basic operations")
-    void testClientServerConnection() throws Exception{
-        Random random = new Random();
-        System.out.println("Testing client server connection");
-
-        Registry clientRegistry = LocateRegistry.getRegistry("localhost", TEST_RMI_PORT);
-        Calculator calculator = (Calculator) clientRegistry.lookup("Calculator");
-
-        assertNotNull(calculator, "Calculator should not be null");
-        assertTrue(calculator.isEmpty(), "Calculator should initially be empty");
-
-        int randomInt = random.nextInt(100);
-        calculator.pushValue(randomInt);
-        assertFalse(calculator.isEmpty(), "Calculator should now be NOT empty");
-
-        int res = calculator.pop();
-        assertEquals(randomInt, res, "Calculator should pop the same value that was pushed");
-
-        assertTrue(calculator.isEmpty(), "Calculator should now be empty again");
-
-        System.out.println("Client server test completed successfully");
-    }
-
-    @Test
-    @DisplayName("Test multiple clients sharing the same stack")
-    void testSharedStack() throws Exception{
-        System.out.println("Testing multiple clients sharing the same stack");
-
-        final int NUM_CLIENTS = 3;
-        final int VALUES_PER_CLIENT = 5;
-
-        Calculator[] clients = new Calculator[NUM_CLIENTS];
-        for(int i = 0; i < NUM_CLIENTS; i++){
-            Registry clientRegistry = LocateRegistry.getRegistry("localHost", TEST_RMI_PORT);
-            clients[i] = (Calculator) clientRegistry.lookup("Calculator");
-        }
-
-        for(Calculator client : clients){
-            assertTrue(client.isEmpty(), "Initially the stack should be empty for all clients");
-        }
-
-        Random random = new Random();
-        for(int i = 0; i < NUM_CLIENTS; i++){
-            for(int j = 0; j < VALUES_PER_CLIENT; j++){
-                int randomInt = random.nextInt(100);
-                clients[i].pushValue(randomInt);
-                System.out.println("Client " + i + " pushed the value " + randomInt);
-            }
-        }
-
-        for (int i = 0; i < NUM_CLIENTS; i++) {
-            assertFalse(clients[i].isEmpty(), "Clients should see non empty stack");
-        }
-
-        int TOTAL_VALUES = NUM_CLIENTS * VALUES_PER_CLIENT;
-        for(int i = 0; i < TOTAL_VALUES; i++){
-            clients[0].pop();
-        }
-
-        for (int i = 0; i < NUM_CLIENTS; i++) {
-            assertTrue(clients[i].isEmpty(), "All clients should see empty stack now");
-        }
-
-        System.out.println("Multi client shared stack test completed successfully");
-    }
-
-    @Test
-    @DisplayName("DelayPop with multiple clients correctly")
-    void testConcurrentDelayPop() throws Exception {
-        System.out.println("Testing concurrent delayPop operations");
+    @DisplayName("per client stack test")
+    void testPerClientStackIsolation() throws Exception {
+        System.out.println("Testing per client stack ");
 
         Registry registry1 = LocateRegistry.getRegistry("localhost", TEST_RMI_PORT);
-        Registry registry2 = LocateRegistry.getRegistry("localhost", TEST_RMI_PORT);
-
         Calculator client1 = (Calculator) registry1.lookup("Calculator");
+
+        String session1 = client1.createSession();
+        client1.setSession(session1);
+        System.out.println("Client 1 session: " + session1);
+
+        assertTrue(client1.isEmpty(), "Client 1 should start empty");
+        client1.pushValue(10);
+        client1.pushValue(20);
+        assertFalse(client1.isEmpty(), "Client 1 should have values");
+
+        assertEquals(20, client1.pop(), "Client 1 should get 20");
+        assertEquals(10, client1.pop(), "Client 1 should get 10");
+        assertTrue(client1.isEmpty(), "Client 1 should be empty");
+
+        System.out.println("Client 1 test completed successfully");
+
+        Registry registry2 = LocateRegistry.getRegistry("localhost", TEST_RMI_PORT);
         Calculator client2 = (Calculator) registry2.lookup("Calculator");
 
-        client1.pushValue(100);
-        client1.pushValue(200);
+        String session2 = client2.createSession();
+        client2.setSession(session2);
+        System.out.println("Client 2 session: " + session2);
 
-        final long[] client1Result = new long[2];
-        final long[] client2Result = new long[2];
-        final Exception[] exceptions = new Exception[2];
+        assertNotEquals(session1, session2, "Each client should have unique session");
 
-        Thread thread1 = new Thread(() -> {
-            try {
-                long startTime = System.currentTimeMillis();
-                int value = client1.delayPop(1000);
-                long endTime = System.currentTimeMillis();
+        assertTrue(client2.isEmpty(), "Client 2 should start empty");
+        client2.pushValue(100);
+        client2.pushValue(200);
+        assertFalse(client2.isEmpty(), "Client 2 should have values");
 
-                client1Result[0] = value;
-                client1Result[1] = endTime - startTime;
+        assertEquals(200, client2.pop(), "Client 2 should get 200");
+        assertEquals(100, client2.pop(), "Client 2 should get 100");
+        assertTrue(client2.isEmpty(), "Client 2 should be empty");
 
-                System.out.println("Client 1 delayPop returned: " + value +
-                        " after " + (endTime - startTime) + "ms");
-            } catch (Exception e) {
-                exceptions[0] = e;
-            }
-        });
+        System.out.println("Client 2 test completed successfully");
 
-        Thread thread2 = new Thread(() -> {
-            try {
-                Thread.sleep(500);
-                long startTime = System.currentTimeMillis();
-                int value = client2.delayPop(1000);
-                long endTime = System.currentTimeMillis();
+        assertTrue(client1.isEmpty(), "Client 1 should still be empty");
 
-                client2Result[0] = value;
-                client2Result[1] = endTime - startTime;
+        assertTrue(client2.isEmpty(), "Client 2 should be empty");
 
-                System.out.println("Client 2 delayPop returned " + value +
-                        " after " + (endTime - startTime) + "milliseconds");
-            } catch (Exception e) {
-                exceptions[1] = e;
-            }
-        });
+        System.out.println("Per client stack test completed successfully");
+    }
 
-        long testStartTime = System.currentTimeMillis();
-        thread1.start();
-        thread2.start();
+    @Test
+    @DisplayName("Should test all calculator operations")
+    void testAllCalculatorOperations() throws Exception {
+        Registry registry = LocateRegistry.getRegistry("localhost", TEST_RMI_PORT);
+        Calculator calc = (Calculator) registry.lookup("Calculator");
 
-        thread1.join();
-        thread2.join();
-        long testEndTime = System.currentTimeMillis();
+        String sessionId = calc.createSession();
+        calc.setSession(sessionId);
 
-        assertNull(exceptions[0], "Client 1 should not have thrown exception");
-        assertNull(exceptions[1], "Client 2 should not have thrown exception");
+        calc.pushValue(12);
+        calc.pushValue(18);
+        calc.pushValue(24);
+        calc.pushOperation("gcd");
+        assertEquals(6, calc.pop(), "GCD of 12, 18, 24 should be 6");
 
-        assertTrue(client1Result[1] >= 1000, "Client 1 should have waited at least 1 second");
-        assertTrue(client2Result[1] >= 1000, "Client 2 should have waited at least 1 second");
+        calc.pushValue(4);
+        calc.pushValue(6);
+        calc.pushOperation("lcm");
+        assertEquals(12, calc.pop(), "LCM of 4, 6 should be 12");
 
-        assertEquals(200, client1Result[0], "First delayPop should return last pushed value which is 200");
-        assertEquals(100, client2Result[0], "Second delayPop should return second-to-last value (100)");
+        calc.pushValue(15);
+        calc.pushValue(5);
+        calc.pushValue(25);
+        calc.pushOperation("min");
+        assertEquals(5, calc.pop(), "Min of 15, 5, 25 should be 5");
 
-        assertTrue(client1.isEmpty(), "Stack should be empty after both delayPops");
-        assertTrue(client2.isEmpty(), "Stack should be empty after both delayPops");
+        calc.pushValue(15);
+        calc.pushValue(5);
+        calc.pushValue(25);
+        calc.pushOperation("max");
+        assertEquals(25, calc.pop(), "Max of 15, 5, 25 should be 25");
 
-        long totalTestTime = testEndTime - testStartTime;
-        System.out.println("Total test time: " + totalTestTime + "milliseconds");
-        System.out.println("Concurrent delayPop test completed successfully");
+        calc.pushValue(42);
+        long startTime = System.currentTimeMillis();
+        int result = calc.delayPop(1000);
+        long endTime = System.currentTimeMillis();
+        assertEquals(42, result, "DelayPop should return correct value");
+        assertTrue(endTime - startTime >= 1000, "DelayPop should wait at least 1 second");
+
+        System.out.println("Calculator operations test completed successfully");
+    }
+
+    @Test
+    @DisplayName("Should handle error conditions properly")
+    void testErrorHandling() throws Exception {
+        Registry registry = LocateRegistry.getRegistry("localhost", TEST_RMI_PORT);
+        Calculator calc = (Calculator) registry.lookup("Calculator");
+
+        String sessionId = calc.createSession();
+        calc.setSession(sessionId);
+
+        RemoteException exception = assertThrows(RemoteException.class, calc::pop, "Should throw exception when popping from empty stack");
+        assertTrue(exception.getMessage().contains("empty"), "Exception should mention empty stack");
+
+        calc.pushValue(10);
+        RemoteException opException = assertThrows(RemoteException.class, () -> {
+            calc.pushOperation("invalid");
+        }, "Should throw exception for invalid operation");
+        assertTrue(opException.getMessage().contains("Invalid operator"), "Exception should mention invalid operator");
+
+        RemoteException sessionException = assertThrows(RemoteException.class, () -> {
+            calc.setSession("fake-session-id");
+        }, "Should throw exception for invalid session ID");
+        assertTrue(sessionException.getMessage().contains("Invalid session"), "Exception should mention invalid session");
+
+        System.out.println("Error handling test completed successfully");
+    }
+
+    @Test
+    @DisplayName("per client stack test")
+    @Order(3)
+    void testBonusFeatureStackIsolation() throws Exception {
+        System.out.println("per client stack testing");
+
+        Registry registry1 = LocateRegistry.getRegistry("localhost", TEST_RMI_PORT);
+        Calculator client1 = (Calculator) registry1.lookup("Calculator");
+
+        String session1 = client1.createSession();
+        client1.setSession(session1);
+        System.out.println("Client 1 session: " + session1);
+
+        assertTrue(client1.isEmpty(), "Client 1 should start empty");
+        client1.pushValue(10);
+        client1.pushValue(20);
+        assertFalse(client1.isEmpty(), "Client 1 should have values");
+
+        assertEquals(20, client1.pop(), "Client 1 should get 20");
+        assertEquals(10, client1.pop(), "Client 1 should get 10");
+        assertTrue(client1.isEmpty(), "Client 1 should be empty");
+
+        System.out.println("Client 1 completed successfully");
+
+        Registry registry2 = LocateRegistry.getRegistry("localhost", TEST_RMI_PORT);
+        Calculator client2 = (Calculator) registry2.lookup("Calculator");
+
+        String session2 = client2.createSession();
+        client2.setSession(session2);
+        System.out.println("Client 2 session: " + session2);
+
+        assertNotEquals(session1, session2, "Each client should have unique session");
+
+        assertTrue(client2.isEmpty(), "Client 2 should start empty");
+        client2.pushValue(100);
+        client2.pushValue(200);
+        assertFalse(client2.isEmpty(), "Client 2 should have values");
+
+        assertEquals(200, client2.pop(), "Client 2 should get 200");
+        assertEquals(100, client2.pop(), "Client 2 should get 100");
+        assertTrue(client2.isEmpty(), "Client 2 should be empty");
+
+        System.out.println("Client 2 completed successfully");
+
+        assertTrue(client1.isEmpty(), "Client 1 should still be empty");
+        assertTrue(client2.isEmpty(), "Client 2 should be empty");
+
+        System.out.println("Per client stack test completed");
+    }
+
+    @Test
+    @DisplayName("Test session switching")
+    @Order(4)
+    void testBonusFeatureSessionSwitching() throws Exception {
+        System.out.println("testing session switching");
+
+        Registry reg = LocateRegistry.getRegistry("localhost", TEST_RMI_PORT);
+        Calculator calc = (Calculator) reg.lookup("Calculator");
+
+        String sessionA = calc.createSession();
+        String sessionB = calc.createSession();
+        String sessionC = calc.createSession();
+
+        assertNotNull(sessionA, "Session A should be created");
+        assertNotNull(sessionB, "Session B should be created");
+        assertNotNull(sessionC, "Session C should be created");
+
+        assertNotEquals(sessionA, sessionB, "Sessions should be unique");
+        assertNotEquals(sessionB, sessionC, "Sessions should be unique");
+        assertNotEquals(sessionA, sessionC, "Sessions should be unique");
+
+        System.out.println("Created sessions: A=" + sessionA.substring(0, 8) + "..., B=" + sessionB.substring(0, 8) + "..., C=" + sessionC.substring(0, 8) + "...");
+
+        calc.setSession(sessionA);
+        calc.pushValue(111);
+
+        calc.setSession(sessionB);
+        calc.pushValue(222);
+
+        calc.setSession(sessionC);
+        calc.pushValue(333);
+
+        calc.setSession(sessionA);
+        assertEquals(111, calc.pop(), "Session A should retain its value");
+
+        calc.setSession(sessionB);
+        assertEquals(222, calc.pop(), "Session B should retain its value");
+
+        calc.setSession(sessionC);
+        assertEquals(333, calc.pop(), "Session C should retain its value");
+
+        System.out.println("Session switching test completed successfully ");
     }
 }

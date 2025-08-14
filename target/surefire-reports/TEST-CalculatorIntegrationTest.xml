@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="CalculatorIntegrationTest" time="4.073" tests="3" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="CalculatorIntegrationTest" time="3.107" tests="5" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -12,9 +12,10 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="AU"/>
     <property name="sun.boot.library.path" value="/Users/dindin/.sdkman/candidates/java/17.0.9-tem/lib"/>
-    <property name="sun.java.command" value="/Users/dindin/Desktop/Uni Work/3rd Year/Distributed Systems/target/surefire/surefirebooter-20250814151205845_3.jar /Users/dindin/Desktop/Uni Work/3rd Year/Distributed Systems/target/surefire 2025-08-14T15-12-05_751-jvmRun1 surefire-20250814151205845_1tmp surefire_0-20250814151205845_2tmp"/>
+    <property name="sun.java.command" value="/Users/dindin/Desktop/Uni Work/3rd Year/Distributed Systems/target/surefire/surefirebooter-20250814181502241_3.jar /Users/dindin/Desktop/Uni Work/3rd Year/Distributed Systems/target/surefire 2025-08-14T18-15-02_148-jvmRun1 surefire-20250814181502241_1tmp surefire_0-20250814181502241_2tmp"/>
     <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="jdk.debug" value="release"/>
+    <property name="test" value="CalculatorIntegrationTest"/>
     <property name="surefire.test.class.path" value="/Users/dindin/Desktop/Uni Work/3rd Year/Distributed Systems/target/test-classes:/Users/dindin/Desktop/Uni Work/3rd Year/Distributed Systems/target/classes:/Users/dindin/.m2/repository/org/junit/jupiter/junit-jupiter/5.9.2/junit-jupiter-5.9.2.jar:/Users/dindin/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.9.2/junit-jupiter-api-5.9.2.jar:/Users/dindin/.m2/repository/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar:/Users/dindin/.m2/repository/org/junit/platform/junit-platform-commons/1.9.2/junit-platform-commons-1.9.2.jar:/Users/dindin/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/dindin/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.9.2/junit-jupiter-params-5.9.2.jar:/Users/dindin/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.9.2/junit-jupiter-engine-5.9.2.jar:/Users/dindin/.m2/repository/org/junit/platform/junit-platform-engine/1.9.2/junit-platform-engine-1.9.2.jar:"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="/Users/dindin"/>
@@ -26,9 +27,9 @@
     <property name="basedir" value="/Users/dindin/Desktop/Uni Work/3rd Year/Distributed Systems"/>
     <property name="java.vm.compressedOopsMode" value="Zero based"/>
     <property name="line.separator" value="&#10;"/>
-    <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
-    <property name="surefire.real.class.path" value="/Users/dindin/Desktop/Uni Work/3rd Year/Distributed Systems/target/surefire/surefirebooter-20250814151205845_3.jar"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="surefire.real.class.path" value="/Users/dindin/Desktop/Uni Work/3rd Year/Distributed Systems/target/surefire/surefirebooter-20250814181502241_3.jar"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="java.runtime.version" value="17.0.9+9"/>
@@ -55,39 +56,112 @@
     <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="testSharedStack" classname="CalculatorIntegrationTest" time="0.041">
+  <testcase name="testBonusFeatureSessionSwitching" classname="CalculatorIntegrationTest" time="0.04">
     <system-out><![CDATA[Integration test server started on port 1099
 Server startup completed
-Testing multiple clients sharing the same stack
-Client 0 pushed the value 41
-Client 0 pushed the value 70
-Client 0 pushed the value 48
-Client 0 pushed the value 83
-Client 0 pushed the value 27
-Client 1 pushed the value 7
-Client 1 pushed the value 36
-Client 1 pushed the value 92
-Client 1 pushed the value 49
-Client 1 pushed the value 43
-Client 2 pushed the value 48
-Client 2 pushed the value 14
-Client 2 pushed the value 68
-Client 2 pushed the value 47
-Client 2 pushed the value 33
-Multi client shared stack test completed successfully
+testing session switching
+
+New session created edde3c5b-094a-44cc-986a-2755eb1b9d59
+
+New session created d82f310a-78d8-4e14-8510-e68801b4c1f6
+
+New session created 52738e7d-1a50-42a2-827c-79776db9b285
+Created sessions: A=edde3c5b..., B=d82f310a..., C=52738e7d...
+Client set session to edde3c5b-094a-44cc-986a-2755eb1b9d59
+Pushed 111 to session edde3c5b-094a-44cc-986a-2755eb1b9d59
+Client set session to d82f310a-78d8-4e14-8510-e68801b4c1f6
+Pushed 222 to session d82f310a-78d8-4e14-8510-e68801b4c1f6
+Client set session to 52738e7d-1a50-42a2-827c-79776db9b285
+Pushed 333 to session 52738e7d-1a50-42a2-827c-79776db9b285
+Client set session to edde3c5b-094a-44cc-986a-2755eb1b9d59
+Popped 111 from session edde3c5b-094a-44cc-986a-2755eb1b9d59
+Client set session to d82f310a-78d8-4e14-8510-e68801b4c1f6
+Popped 222 from session d82f310a-78d8-4e14-8510-e68801b4c1f6
+Client set session to 52738e7d-1a50-42a2-827c-79776db9b285
+Popped 333 from session 52738e7d-1a50-42a2-827c-79776db9b285
+Session switching test completed successfully 
 ]]></system-out>
   </testcase>
-  <testcase name="testClientServerConnection" classname="CalculatorIntegrationTest" time="0.003">
-    <system-out><![CDATA[Testing client server connection
-Client server test completed successfully
+  <testcase name="testAllCalculatorOperations" classname="CalculatorIntegrationTest" time="1.013">
+    <system-out><![CDATA[
+New session created d3b6a44a-5815-4ae8-bc15-15ef3aeb9109
+Client set session to d3b6a44a-5815-4ae8-bc15-15ef3aeb9109
+Pushed 12 to session d3b6a44a-5815-4ae8-bc15-15ef3aeb9109
+Pushed 18 to session d3b6a44a-5815-4ae8-bc15-15ef3aeb9109
+Pushed 24 to session d3b6a44a-5815-4ae8-bc15-15ef3aeb9109
+Operation gcd completed for session d3b6a44a-5815-4ae8-bc15-15ef3aeb9109, result: 6
+Popped 6 from session d3b6a44a-5815-4ae8-bc15-15ef3aeb9109
+Pushed 4 to session d3b6a44a-5815-4ae8-bc15-15ef3aeb9109
+Pushed 6 to session d3b6a44a-5815-4ae8-bc15-15ef3aeb9109
+Operation lcm completed for session d3b6a44a-5815-4ae8-bc15-15ef3aeb9109, result: 12
+Popped 12 from session d3b6a44a-5815-4ae8-bc15-15ef3aeb9109
+Pushed 15 to session d3b6a44a-5815-4ae8-bc15-15ef3aeb9109
+Pushed 5 to session d3b6a44a-5815-4ae8-bc15-15ef3aeb9109
+Pushed 25 to session d3b6a44a-5815-4ae8-bc15-15ef3aeb9109
+Operation min completed for session d3b6a44a-5815-4ae8-bc15-15ef3aeb9109, result: 5
+Popped 5 from session d3b6a44a-5815-4ae8-bc15-15ef3aeb9109
+Pushed 15 to session d3b6a44a-5815-4ae8-bc15-15ef3aeb9109
+Pushed 5 to session d3b6a44a-5815-4ae8-bc15-15ef3aeb9109
+Pushed 25 to session d3b6a44a-5815-4ae8-bc15-15ef3aeb9109
+Operation max completed for session d3b6a44a-5815-4ae8-bc15-15ef3aeb9109, result: 25
+Popped 25 from session d3b6a44a-5815-4ae8-bc15-15ef3aeb9109
+Pushed 42 to session d3b6a44a-5815-4ae8-bc15-15ef3aeb9109
+Popped 42 from session d3b6a44a-5815-4ae8-bc15-15ef3aeb9109
+Calculator operations test completed successfully
 ]]></system-out>
   </testcase>
-  <testcase name="testConcurrentDelayPop" classname="CalculatorIntegrationTest" time="2.018">
-    <system-out><![CDATA[Testing concurrent delayPop operations
-Client 1 delayPop returned: 200 after 1006ms
-Client 2 delayPop returned 100 after 1506milliseconds
-Total test time: 2012milliseconds
-Concurrent delayPop test completed successfully
+  <testcase name="testPerClientStackIsolation" classname="CalculatorIntegrationTest" time="0.012">
+    <system-out><![CDATA[Testing per client stack 
+
+New session created 05b6f5f1-1f54-48d3-bd97-f70ee153868f
+Client set session to 05b6f5f1-1f54-48d3-bd97-f70ee153868f
+Client 1 session: 05b6f5f1-1f54-48d3-bd97-f70ee153868f
+Pushed 10 to session 05b6f5f1-1f54-48d3-bd97-f70ee153868f
+Pushed 20 to session 05b6f5f1-1f54-48d3-bd97-f70ee153868f
+Popped 20 from session 05b6f5f1-1f54-48d3-bd97-f70ee153868f
+Popped 10 from session 05b6f5f1-1f54-48d3-bd97-f70ee153868f
+Client 1 test completed successfully
+
+New session created 0cc04c66-b0d5-4246-896b-93f0aa2b7629
+Client set session to 0cc04c66-b0d5-4246-896b-93f0aa2b7629
+Client 2 session: 0cc04c66-b0d5-4246-896b-93f0aa2b7629
+Pushed 100 to session 0cc04c66-b0d5-4246-896b-93f0aa2b7629
+Pushed 200 to session 0cc04c66-b0d5-4246-896b-93f0aa2b7629
+Popped 200 from session 0cc04c66-b0d5-4246-896b-93f0aa2b7629
+Popped 100 from session 0cc04c66-b0d5-4246-896b-93f0aa2b7629
+Client 2 test completed successfully
+Per client stack test completed successfully
+]]></system-out>
+  </testcase>
+  <testcase name="testErrorHandling" classname="CalculatorIntegrationTest" time="0.012">
+    <system-out><![CDATA[
+New session created 2e8d32bb-22f0-484a-ac18-148d6c51fdee
+Client set session to 2e8d32bb-22f0-484a-ac18-148d6c51fdee
+Pushed 10 to session 2e8d32bb-22f0-484a-ac18-148d6c51fdee
+Error handling test completed successfully
+]]></system-out>
+  </testcase>
+  <testcase name="testBonusFeatureStackIsolation" classname="CalculatorIntegrationTest" time="0.006">
+    <system-out><![CDATA[per client stack testing
+
+New session created 0526db40-2545-4eb5-88d7-efdf87c8ffea
+Client set session to 0526db40-2545-4eb5-88d7-efdf87c8ffea
+Client 1 session: 0526db40-2545-4eb5-88d7-efdf87c8ffea
+Pushed 10 to session 0526db40-2545-4eb5-88d7-efdf87c8ffea
+Pushed 20 to session 0526db40-2545-4eb5-88d7-efdf87c8ffea
+Popped 20 from session 0526db40-2545-4eb5-88d7-efdf87c8ffea
+Popped 10 from session 0526db40-2545-4eb5-88d7-efdf87c8ffea
+Client 1 completed successfully
+
+New session created 053d7ca4-44ad-4c38-9bc0-2fc421489367
+Client set session to 053d7ca4-44ad-4c38-9bc0-2fc421489367
+Client 2 session: 053d7ca4-44ad-4c38-9bc0-2fc421489367
+Pushed 100 to session 053d7ca4-44ad-4c38-9bc0-2fc421489367
+Pushed 200 to session 053d7ca4-44ad-4c38-9bc0-2fc421489367
+Popped 200 from session 053d7ca4-44ad-4c38-9bc0-2fc421489367
+Popped 100 from session 053d7ca4-44ad-4c38-9bc0-2fc421489367
+Client 2 completed successfully
+Per client stack test completed
 ]]></system-out>
   </testcase>
 </testsuite>

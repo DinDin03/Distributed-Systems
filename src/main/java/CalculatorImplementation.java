@@ -21,20 +21,29 @@ public class CalculatorImplementation extends UnicastRemoteObject implements Cal
 
     @Override
     public synchronized void pushValue(int val) throws RemoteException{
-        stack.push(val);
+        Deque<Integer> clientStack = getCurrentClientStack();
+        clientStack.push(val);
+        System.out.println("Pushed " + val + " to session " + currentSession.get());
+
     }
 
     @Override
     public synchronized int pop() throws RemoteException{
-        if(stack.isEmpty()){
+        Deque<Integer> clientStack = getCurrentClientStack();
+
+        if(clientStack.isEmpty()){
             throw new RemoteException("Cannot pop from an empty stack");
         }
-        return stack.pop();
+
+        int value = clientStack.pop();
+        System.out.println("Popped " + value + " from session " + currentSession.get());
+        return value;
     }
 
     @Override
     public synchronized boolean isEmpty() throws RemoteException{
-        return stack.isEmpty();
+        Deque<Integer> clientStack = getCurrentClientStack();
+        return clientStack.isEmpty();
     }
 
     @Override
@@ -49,51 +58,71 @@ public class CalculatorImplementation extends UnicastRemoteObject implements Cal
     }
 
     @Override
-    public synchronized void pushOperation(String operator) throws RemoteException{
-        if(!validOperators.contains(operator)){
-            throw new RemoteException("Invalid operator: " + operator + 
-                                    ". Valid operators are: min, max, gcd, lcm");
+    public synchronized void pushOperation(String operator) throws RemoteException {
+        if (!validOperators.contains(operator)) {
+            throw new RemoteException("Invalid operator " + operator +
+                    " Valid operators are min, max, gcd, lcm");
         }
-        if(stack.isEmpty()){
+
+        Deque<Integer> clientStack = getCurrentClientStack();
+
+        if (clientStack.isEmpty()) {
             throw new RemoteException("Cannot perform operation on empty stack");
         }
 
         List<Integer> values = new ArrayList<>();
-        while(!stack.isEmpty()){
-            values.add(stack.pop());
+        while (!clientStack.isEmpty()) {
+            values.add(clientStack.pop());
         }
 
         int result;
-        if(operator.equals("min")){
+        if (operator.equals("min")) {
             result = Collections.min(values);
         }
-        else if(operator.equals("max")){
+        else if (operator.equals("max")) {
             result = Collections.max(values);
         }
-        else if(operator.equals("gcd")){
+        else if (operator.equals("gcd")) {
             result = gcdMultiple(values);
         }
-        else if(operator.equals("lcm")){
+        else if (operator.equals("lcm")) {
             long lcmResult = lcmMultiple(values);
-            if(lcmResult > Integer.MAX_VALUE){
-                throw new RemoteException("LCM result too large for integer: " + lcmResult);
+            if (lcmResult > Integer.MAX_VALUE) {
+                throw new RemoteException("LCM result too large for integer " + lcmResult);
             }
             result = (int)lcmResult;
         }
         else {
-            throw new RemoteException("Unknown operator: " + operator);
+            throw new RemoteException("Unknown operator " + operator);
         }
 
-        stack.push(result);
+        clientStack.push(result);
+
+        System.out.println("Operation " + operator + " completed for session " + currentSession.get() +
+                ", result: " + result);
     }
 
     @Override
     public synchronized String createSession() throws RemoteException{
         String sessionId = UUID.randomUUID().toString();
         clientStacks.put(sessionId, new ArrayDeque<>());
-        System.out.println("New session created " + sessionId);
+        System.out.println("\nNew session created " + sessionId);
 
         return sessionId;
+    }
+
+    @Override
+    public synchronized void setSession(String sessionId) throws RemoteException {
+        if (sessionId == null) {
+            throw new RemoteException("Session ID cannot be null");
+        }
+
+        if (!clientStacks.containsKey(sessionId)) {
+            throw new RemoteException("Invalid session ID " + sessionId);
+        }
+
+        currentSession.set(sessionId);
+        System.out.println("Client set session to " + sessionId);
     }
 
     private int gcd(int a, int b){
@@ -128,6 +157,22 @@ public class CalculatorImplementation extends UnicastRemoteObject implements Cal
             }
         }
         return res;
+    }
+
+    private Deque<Integer> getCurrentClientStack() throws RemoteException{
+        String sessionId = currentSession.get();
+
+        if(sessionId == null){
+            throw new RemoteException("No session set, create and set session first");
+        }
+
+        Deque<Integer> clientStack = clientStacks.get(sessionId);
+
+        if(clientStack == null){
+            throw new RemoteException("Invalid session. Expired or incorrect session id");
+        }
+
+        return clientStack;
     }
 
 

@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: CalculatorIntegrationTest
 -------------------------------------------------------------------------------
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.073 s - in CalculatorIntegrationTest
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.107 s - in CalculatorIntegrationTest
