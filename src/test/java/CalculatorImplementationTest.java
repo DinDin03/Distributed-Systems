@@ -6,10 +6,12 @@ import java.rmi.RemoteException;
 
 public class CalculatorImplementationTest {
     private CalculatorImplementation calculator;
-    
+
     @BeforeEach
     void setUp() throws RemoteException {
         calculator = new CalculatorImplementation();
+        String testSessionId = calculator.createSession();
+        calculator.setSession(testSessionId);
     }
     
     @Test
