@@ -137,8 +137,8 @@ mvn test -Dtest=CalculatorIntegrationTest
 ```
 
 ### Test Coverage
-- **Unit Tests**: Mathematical operations, error handling, single client scenarios
-- **Integration Tests**: RMI communication, multi client scenarios, bonus feature
+- Unit Tests - Mathematical operations, error handling, single client scenarios
+- Integration Tests - RMI communication, multi client scenarios, bonus feature
 
 ## Multi-Client Testing
 
