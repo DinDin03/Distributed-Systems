@@ -4,16 +4,19 @@ import org.junit.jupiter.api.DisplayName;
 import static org.junit.jupiter.api.Assertions.*;
 import java.rmi.RemoteException;
 
+//Unit tests for CalculatorImplementation class testing all mathematical operations and
 public class CalculatorImplementationTest {
     private CalculatorImplementation calculator;
 
+    //Setup a new calculator instance with a session before each test
     @BeforeEach
     void setUp() throws RemoteException {
         calculator = new CalculatorImplementation();
         String testSessionId = calculator.createSession();
         calculator.setSession(testSessionId);
     }
-    
+
+    //Test GCD calculation
     @Test
     @DisplayName("Should calculate GCD of multiple numbers correctly")
     void testGCDCalculation() throws RemoteException {
@@ -27,7 +30,8 @@ public class CalculatorImplementationTest {
         assertEquals(6, result, "GCD of 12, 18, 24 should be 6");
         assertTrue(calculator.isEmpty(), "Stack should be empty after operation");
     }
-    
+
+    //Test LCM calculation
     @Test
     @DisplayName("Should calculate LCM of two numbers correctly")
     void testLCMCalculation() throws RemoteException {
@@ -40,7 +44,8 @@ public class CalculatorImplementationTest {
         assertEquals(12, result, "LCM of 4, 6 should be 12");
         assertTrue(calculator.isEmpty(), "Stack should be empty after operation");
     }
-    
+
+    //Test min operation
     @Test
     @DisplayName("Should find minimum value correctly")
     void testMinOperation() throws RemoteException {
@@ -55,7 +60,8 @@ public class CalculatorImplementationTest {
         assertEquals(5, result, "Min of 15, 5, 25, 10 should be 5");
         assertTrue(calculator.isEmpty(), "Stack should be empty after operation");
     }
-    
+
+    //Test max operation
     @Test
     @DisplayName("Should find maximum value correctly")
     void testMaxOperation() throws RemoteException {
@@ -70,7 +76,8 @@ public class CalculatorImplementationTest {
         assertEquals(25, result, "Max of 15, 5, 25, 10 should be 25");
         assertTrue(calculator.isEmpty(), "Stack should be empty after operation");
     }
-    
+
+    //Test basic stack operations
     @Test
     @DisplayName("Should handle basic stack operations correctly")
     void testBasicStackOperations() throws RemoteException {
@@ -88,7 +95,8 @@ public class CalculatorImplementationTest {
         
         assertTrue(calculator.isEmpty(), "Calculator should be empty after all pops");
     }
-    
+
+    //Test delayPop
     @Test
     @DisplayName("Should handle delayPop correctly")
     void testDelayPop() throws RemoteException {
@@ -102,7 +110,8 @@ public class CalculatorImplementationTest {
         assertTrue(endTime - startTime >= 1000, "DelayPop should wait at least 1 second");
         assertTrue(calculator.isEmpty(), "Stack should be empty after delayPop");
     }
-    
+
+    //Test invalid operations
     @Test
     @DisplayName("Should throw exception for invalid operations")
     void testInvalidOperations() throws RemoteException {
@@ -117,7 +126,8 @@ public class CalculatorImplementationTest {
         
         assertFalse(calculator.isEmpty(), "Stack should still contain original value after failed operation");
     }
-    
+
+    //Test popping from empty stack
     @Test
     @DisplayName("Should throw exception when popping from empty stack")
     void testPopFromEmptyStack() {
@@ -128,7 +138,8 @@ public class CalculatorImplementationTest {
         assertTrue(exception.getMessage().contains("empty"), 
                   "Exception message should mention empty stack");
     }
-    
+
+    //Test operation on empty stack
     @Test
     @DisplayName("Should throw exception when performing operation on empty stack")
     void testOperationOnEmptyStack() {
@@ -139,7 +150,8 @@ public class CalculatorImplementationTest {
         assertTrue(exception.getMessage().contains("empty"), 
                   "Exception message should mention empty stack");
     }
-    
+
+    //Test single value operations
     @Test
     @DisplayName("Should handle single value operations correctly")
     void testSingleValueOperations() throws RemoteException {

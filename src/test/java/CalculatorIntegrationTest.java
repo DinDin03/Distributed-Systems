@@ -6,11 +6,13 @@ import java.rmi.RemoteException;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.Random;
 
+//Integration tests for the Calculator RMI service
 public class CalculatorIntegrationTest {
     private static Registry registry;
     private static Thread serverThread;
     private static final int TEST_RMI_PORT = 1099;
 
+    //Start the RMI server before running tests
     @BeforeAll
     static void startServer() throws Exception{
         serverThread = new Thread(() -> {
@@ -23,7 +25,7 @@ public class CalculatorIntegrationTest {
 
                 System.out.println("Integration test server started on port " + TEST_RMI_PORT);
             } catch (Exception e) {
-                System.err.println("Failed to start test server: " + e.getMessage());
+                System.err.println("Failed to start test server " + e.getMessage());
             }
         });
 
@@ -33,6 +35,7 @@ public class CalculatorIntegrationTest {
         
     }
 
+    //Stop the RMI server after running tests
     @AfterAll
     static void stopServer() throws Exception{
         System.out.println("Stopping integration test server");
@@ -65,6 +68,7 @@ public class CalculatorIntegrationTest {
         System.out.println("Server shutdown completed");
     }
 
+    //Test per client stack isolation
     @Test
     @DisplayName("per client stack test")
     void testPerClientStackIsolation() throws Exception {
@@ -75,7 +79,7 @@ public class CalculatorIntegrationTest {
 
         String session1 = client1.createSession();
         client1.setSession(session1);
-        System.out.println("Client 1 session: " + session1);
+        System.out.println("Client 1 session - " + session1);
 
         assertTrue(client1.isEmpty(), "Client 1 should start empty");
         client1.pushValue(10);
@@ -93,7 +97,7 @@ public class CalculatorIntegrationTest {
 
         String session2 = client2.createSession();
         client2.setSession(session2);
-        System.out.println("Client 2 session: " + session2);
+        System.out.println("Client 2 session - " + session2);
 
         assertNotEquals(session1, session2, "Each client should have unique session");
 
@@ -115,6 +119,7 @@ public class CalculatorIntegrationTest {
         System.out.println("Per client stack test completed successfully");
     }
 
+    //Test all calculator operations
     @Test
     @DisplayName("Should test all calculator operations")
     void testAllCalculatorOperations() throws Exception {
@@ -157,6 +162,7 @@ public class CalculatorIntegrationTest {
         System.out.println("Calculator operations test completed successfully");
     }
 
+    //Test error handling
     @Test
     @DisplayName("Should handle error conditions properly")
     void testErrorHandling() throws Exception {
@@ -183,6 +189,7 @@ public class CalculatorIntegrationTest {
         System.out.println("Error handling test completed successfully");
     }
 
+    //Test per client stack isolation
     @Test
     @DisplayName("per client stack test")
     @Order(3)
@@ -194,7 +201,7 @@ public class CalculatorIntegrationTest {
 
         String session1 = client1.createSession();
         client1.setSession(session1);
-        System.out.println("Client 1 session: " + session1);
+        System.out.println("Client 1 session - " + session1);
 
         assertTrue(client1.isEmpty(), "Client 1 should start empty");
         client1.pushValue(10);
@@ -212,7 +219,7 @@ public class CalculatorIntegrationTest {
 
         String session2 = client2.createSession();
         client2.setSession(session2);
-        System.out.println("Client 2 session: " + session2);
+        System.out.println("Client 2 session - " + session2);
 
         assertNotEquals(session1, session2, "Each client should have unique session");
 
@@ -233,6 +240,7 @@ public class CalculatorIntegrationTest {
         System.out.println("Per client stack test completed");
     }
 
+    //Test session switching
     @Test
     @DisplayName("Test session switching")
     @Order(4)
@@ -253,8 +261,6 @@ public class CalculatorIntegrationTest {
         assertNotEquals(sessionA, sessionB, "Sessions should be unique");
         assertNotEquals(sessionB, sessionC, "Sessions should be unique");
         assertNotEquals(sessionA, sessionC, "Sessions should be unique");
-
-        System.out.println("Created sessions: A=" + sessionA.substring(0, 8) + "..., B=" + sessionB.substring(0, 8) + "..., C=" + sessionC.substring(0, 8) + "...");
 
         calc.setSession(sessionA);
         calc.pushValue(111);

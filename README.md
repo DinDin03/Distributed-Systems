@@ -59,12 +59,6 @@ mvn compile
 mvn test-compile
 ```
 
-### 2. Manual compilation (if maven doesn't work)
-```bash
-javac -cp . src/main/java/*.java
-javac -cp .:target/test-classes src/test/java/*.java
-```
-
 ## Running the system
 
 ### Method 1: Using Maven
@@ -133,7 +127,7 @@ mvn test -Dtest=CalculatorIntegrationTest
 - **Unit Tests**: Mathematical operations, error handling, single client scenarios
 - **Integration Tests**: RMI communication, multi client scenarios, bonus feature
 
-## 🔧 Multi-Client Testing
+## Multi-Client Testing
 
 ### Testing Multiple Clients Simultaneously
 
@@ -159,9 +153,9 @@ mvn exec:java -Dexec.mainClass="CalculatorClient"
 
 ### Expected Behavior
 - Each client gets a unique session ID
-- Each client operates on their **own isolated stack**
-- Operations from one client **do not affect** other clients
-- Server logs show **different session IDs** for each client
+- Each client operates on their own isolated stack
+- Operations from one client do not affect other clients
+- Server logs show different session IDs for each client
 
 ## Code quality
 
@@ -189,8 +183,8 @@ mvn exec:java -Dexec.mainClass="CalculatorClient"
 
 ### Per client stack architecture
 ```
-Client A → RMI → Server thread 1 → ThreadLocal[SessionA] → StackA
-Client B → RMI → Server thread 2 → ThreadLocal[SessionB] → StackB
-Client C → RMI → Server thread 3 → ThreadLocal[SessionC] → StackC
+Client A -> RMI → Server thread 1 -> ThreadLocal[SessionA] -> Stack A
+Client B -> RMI → Server thread 2 -> ThreadLocal[SessionB] -> Stack B
+Client C -> RMI → Server thread 3 -> ThreadLocal[SessionC] -> Stack C
 ```
 
