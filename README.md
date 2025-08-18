@@ -38,6 +38,9 @@
 ### Verify prerequisites
 ```bash
 
+#checkout to the Assignment1 branch
+git checkout Assignment1
+
 # Check Java version
 java -version
 
