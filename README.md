@@ -37,6 +37,7 @@
 
 ### Verify prerequisites
 ```bash
+
 # Check Java version
 java -version
 
@@ -51,6 +52,7 @@ sudo apt install maven
 
 ### 1. Compile all Java files
 ```bash
+
 # Navigate to project directory
 # Compile all source files
 mvn compile
@@ -65,6 +67,7 @@ mvn test-compile
 
 #### Terminal 1 - Start RMI Server
 ```bash
+
 # Start the RMI server
 mvn exec:java -Dexec.mainClass="CalculatorServer"
 
@@ -72,6 +75,7 @@ mvn exec:java -Dexec.mainClass="CalculatorServer"
 
 #### Terminal 2 - Run client
 ```bash
+
 # Run the test client
 mvn exec:java -Dexec.mainClass="CalculatorClient"
 ```
@@ -80,17 +84,20 @@ mvn exec:java -Dexec.mainClass="CalculatorClient"
 
 #### Make scripts executable
 ```bash
+
 chmod +x scripts/start-server.sh
 chmod +x scripts/run-client.sh
 ```
 
 #### Terminal 1 - Start Server
 ```bash
+
 ./scripts/start-server.sh
 ```
 
 #### Terminal 2 - Run Client
 ```bash
+
 ./scripts/run-client.sh
 ```
 
@@ -98,6 +105,7 @@ chmod +x scripts/run-client.sh
 
 ### Run All Tests
 ```bash
+
 # Run both unit and integration tests
 mvn test
 
@@ -109,6 +117,7 @@ mvn test
 
 #### Unit Tests Only
 ```bash
+
 mvn test -Dtest=CalculatorImplementationTest
 
 # Tests mathematical operations in isolation
@@ -117,6 +126,7 @@ mvn test -Dtest=CalculatorImplementationTest
 
 #### Integration Tests Only
 ```bash
+
 mvn test -Dtest=CalculatorIntegrationTest
 
 # Tests full RMI client-server communication
@@ -133,21 +143,25 @@ mvn test -Dtest=CalculatorIntegrationTest
 
 #### Terminal 1 - Server
 ```bash
+
 mvn exec:java -Dexec.mainClass="CalculatorServer"
 ```
 
 #### Terminal 2 - Client 1
 ```bash
+
 mvn exec:java -Dexec.mainClass="CalculatorClient"
 ```
 
 #### Terminal 3 - Client 2
 ```bash
+
 mvn exec:java -Dexec.mainClass="CalculatorClient"
 ```
 
 #### Terminal 4 - Client 3
 ```bash
+
 mvn exec:java -Dexec.mainClass="CalculatorClient"
 ```
 
